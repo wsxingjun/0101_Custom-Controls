@@ -5,7 +5,7 @@ android {
     buildToolsVersion "27.0.3"
 
     defaultConfig {
-        applicationId "com.codingman.www.customimageview"
+        applicationId "com.oztaking.www.customcircleprogress"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
@@ -29,7 +29,6 @@ dependencies {
     })
 //    compile 'com.android.support:appcompat-v7:27.+'
     compile 'com.android.support:appcompat-v7:25.3.1'
-
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }

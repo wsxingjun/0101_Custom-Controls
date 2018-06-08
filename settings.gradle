@@ -1,1 +1,1 @@
-include ':app', ':customimageview'
+include ':app', ':customimageview', ':customcircleprogress'

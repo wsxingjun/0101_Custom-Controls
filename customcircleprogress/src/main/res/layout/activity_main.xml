@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.oztaking.www.customcircleprogress.MainActivity">
+
+    <com.oztaking.www.customcircleprogress.CustomProgressBar
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:padding="10dp"
+        app:circleWidth="15dp"
+        app:firstColor="@color/colorAccent"
+        app:secondColor="@color/colorPrimary"
+        app:speed="100"/>
+
+    <com.oztaking.www.customcircleprogress.CustomProgressBar
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:circleWidth="25sp"
+        app:firstColor="#16A3FA"
+        app:secondColor="#D20F02"
+        app:speed="20"/>
+
+
+</LinearLayout>
