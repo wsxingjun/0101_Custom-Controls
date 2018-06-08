@@ -9,9 +9,11 @@
 
 
     <com.codingman.www.customcontrol.CustomTitleView
-        android:layout_width = "200dp"
-        android:layout_height="100dp"
+        android:layout_width = "wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_centerInParent="true"
         example:titleText="3712"
-        example:titileColor="#ff0000"
-        example:titileTextSize="40sp"/>
+        example:titleTextColor="#ff0000"
+        example:titleTextSize="40sp"/>
 </RelativeLayout>
