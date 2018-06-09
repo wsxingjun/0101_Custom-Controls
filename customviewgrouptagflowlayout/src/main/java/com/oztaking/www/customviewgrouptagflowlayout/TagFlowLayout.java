@@ -7,6 +7,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @function:
  */
@@ -17,6 +20,9 @@ import android.view.View;
  * 在这里首先移除所有的子View，然后根据mAdapter.getView的返回，开始逐个构造子View，然后进行添加。
  * 这里注意下：我们的上述的代码，对mAdapter.getView返回的View，外围报了一层TagView，
  * 这里暂时不要去想，我们后面会细说。
+ * ++++++++++++++++++++++++++++++++++++++++
+ *  这么做就能改变UI了？
+ *
  */
 
 public class TagFlowLayout extends FlowLayout implements TagAdapter.onDataChangedListener{
@@ -24,6 +30,11 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.onDataChange
     private TagAdapter mTagAdapter;
     private MotionEvent mMotionEvent;
     private onTagClickListener mOnTagClickListener;
+    private int mSelectedMax = -1;//-1为不限制数量
+
+    private boolean mSupportMulSelected ;
+
+    private Set<Integer> mSelectedView = new HashSet<Integer>();
 
     public TagFlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -113,6 +124,43 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.onDataChange
             }
         }
         return super.performClick();
+    }
+
+
+    /**
+     * 如果点击了某个标签，进入doSelect方法，首先判断你是否开启了多选的支持（默认支持），
+     * 然后判断当前的View是否是非Checked的状态,如果是非Checked状态，
+     * 则判断最大的选择数量，如果没有达到，则设置checked=true，同时加入已选择的集合；
+     * 反之已经是checked状态，就是取消选择状态了。同时如果设置了mOnSelectListener，回调一下。
+     * ok，其实这里隐藏了一些东西，关于接口回调我们不多赘述了，大家都明白。
+     * 这里主要看Checked。首先你肯定有几个问题：
+     *childView哪来的isChecked(),setChecked()方法？
+     *这么做就能改变UI了？
+     *下面我一一解答：首先，我们并非知道adapter#getView返回的是什么View，
+     *但是可以肯定的是，大部分View都是没有isChecked(),setChecked()方法的。
+     *但是我们需要有，怎么做？还记得我们setAdapter的时候，给getView外层包了一层TagView么，
+     *没错，就是TagView起到的作用：
+     * @param child
+     * @param pos
+     */
+    private void doSelect(TagView child, int pos) {
+        if (mSupportMulSelected){
+            if (!child.isChecked()){
+                if (mSelectedMax > 0 && mSelectedView.size() >= mSelectedMax){
+                    return;
+                }
+                child.setChecked(true);
+                mSelectedView.add(pos);
+            }else {
+                child.setChecked(false);
+                mSelectedView.remove(pos);
+            }
+
+            if (mOnTagClickListener != null){
+                mOnTagClickListener.onSelected(new HashSet<Integer>(mSelectedView));
+            }
+
+        }
     }
 
     private TagView findChild(int x, int y){
