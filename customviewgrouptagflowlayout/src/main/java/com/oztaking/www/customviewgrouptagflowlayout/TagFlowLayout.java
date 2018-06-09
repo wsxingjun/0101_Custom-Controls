@@ -115,12 +115,12 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.onDataChange
         mMotionEvent = null;
 
         TagView child = findChild(x,y);
-        int pos = findPosByView(child);
+//        int pos = findPosByView(child);
 
         if (child != null){
-            doSelect(child,pos);
+//            doSelect(child,pos);
             if (mOnTagClickListener != null){
-                return mOnTagClickListener.onTagClick(child.getTagView(),pos,this);
+//                return mOnTagClickListener.onTagClick(child.getTagView(),pos,this);
             }
         }
         return super.performClick();
@@ -157,7 +157,7 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.onDataChange
             }
 
             if (mOnTagClickListener != null){
-                mOnTagClickListener.onSelected(new HashSet<Integer>(mSelectedView));
+//                mOnTagClickListener.onSelected(new HashSet<Integer>(mSelectedView));
             }
 
         }

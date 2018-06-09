@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/customviewgroup/customviewgroup.iml" filepath="$PROJECT_DIR$/customviewgroup/customviewgroup.iml" />
       <module fileurl="file://$PROJECT_DIR$/customviewgroupflowlayout/customviewgroupflowlayout.iml" filepath="$PROJECT_DIR$/customviewgroupflowlayout/customviewgroupflowlayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/customviewgrouptagflowlayout/customviewgrouptagflowlayout.iml" filepath="$PROJECT_DIR$/customviewgrouptagflowlayout/customviewgrouptagflowlayout.iml" />
+      <module fileurl="file://$PROJECT_DIR$/customviewprogressbar/customviewprogressbar.iml" filepath="$PROJECT_DIR$/customviewprogressbar/customviewprogressbar.iml" />
     </modules>
   </component>
 </project>
