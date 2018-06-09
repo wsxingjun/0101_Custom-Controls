@@ -1,1 +1,1 @@
-include ':app', ':customimageview', ':customcircleprogress', ':customviewgroup'
+include ':app', ':customimageview', ':customcircleprogress', ':customviewgroup', ':customviewgroupflowlayout'
