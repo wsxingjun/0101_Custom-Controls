@@ -5,12 +5,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#aaaaaa"
     tools:context="com.oztaking.www.customviewclipimageborderview.MainActivity">
 
 
-    <com.oztaking.www.customviewclipimageborderview.view.ClipImageBorderView
-        android:id="@+id/cibv_rect"
+    <!--<com.oztaking.www.customviewclipimageborderview.zoomImageView.ZoomImage-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:src="@drawable/a"-->
+        <!--android:scaleType="matrix"-->
+        <!--/>-->
+
+    <!--<com.oztaking.www.customviewclipimageborderview.view.ClipImageBorderView-->
+        <!--android:id="@+id/cibv_rect"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
+
+
+    <!--<com.oztaking.www.customviewclipimageborderview.zoomImageView.ClipImageLayout-->
+        <!--android:id="@+id/cp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+    <!--</com.oztaking.www.customviewclipimageborderview.zoomImageView.ClipImageLayout>-->
+
+    <com.oztaking.www.customviewclipimageborderview.zoomImageView.ClipImageLayout
+        android:id="@+id/cp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+    </com.oztaking.www.customviewclipimageborderview.zoomImageView.ClipImageLayout>
 
 </RelativeLayout>

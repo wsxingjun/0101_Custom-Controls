@@ -45,7 +45,7 @@ public class ClipImageBorderView extends View {
         //计算padding的px
         mHorizontalPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,mHorizontalPadding,getResources().getDisplayMetrics());
 
-        mVerticalPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,mVerticalPadding,getResources().getDisplayMetrics());
+//        mVerticalPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,mVerticalPadding,getResources().getDisplayMetrics());
         mPaint= new Paint();
         mPaint.setAntiAlias(true); //抗锯齿
 
@@ -78,5 +78,10 @@ public class ClipImageBorderView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mBorderWidth);
         canvas.drawRect(mHorizontalPadding,mVerticalPadding,getWidth()-mHorizontalPadding,getHeight()-mVerticalPadding,mPaint);
+    }
+
+    //对外公布设置mHorizontalPadding的方法；
+    public void setHorizontalPadding(int horizontalPadding){
+        this.mHorizontalPadding = horizontalPadding;
     }
 }

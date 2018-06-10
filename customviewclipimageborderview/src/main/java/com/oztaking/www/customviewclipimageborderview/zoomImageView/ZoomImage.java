@@ -1,6 +1,8 @@
 package com.oztaking.www.customviewclipimageborderview.zoomImageView;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -12,19 +14,27 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.Toast;
+import android.view.ViewTreeObserver;
 
 /**
  * @function:
  */
 
-public class ZoomImage extends AppCompatImageView implements ScaleGestureDetector
-        .OnScaleGestureListener,
-        View.OnTouchListener, OnGlobalLayoutListener {
+/**
+ * 原先的ZoomImageView进行简单的修改，修改的地方：
+ * 1、在onGlobalLayout方法中，如果图片的宽或者高只要一个小于我们的正方形的边长，
+ * 会直接把较小的尺寸放大至正方形的边长；
+ * 如果图片的宽和高都大于正方形的边长，仅仅把图片移动到屏幕的中央，不做缩放处理；
+ * 2、根据步骤1，会获得初始的缩放比例（默认为1.0f），然后SCALE_MID ， 与 SCALE_MAX 分别为2倍和4倍的初始化缩放比例。
+ * 3、图片在移动过程中的边界检测完全根据正方形的区域，图片不会在移动过程中与正方形区域产生内边距
+ * 4、对外公布一个裁切的方法
+ */
 
-    private static final float SCALE_MAX = 4.0f; //??
-    private static final float SCALE_MID = 2.0f; //??
+public class ZoomImage extends AppCompatImageView implements ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener,
+        ViewTreeObserver.OnGlobalLayoutListener {
+
+    private static  float SCALE_MAX ; //??
+    private static  float SCALE_MID ; //??
 
 
     //    初始化时的缩放比例，如果图片宽或高大于屏幕，此值将小于0
@@ -36,6 +46,20 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
     //双击手势监测
     private GestureDetector mGestureDetector = null;
 
+    /**
+     * 我们设置了一个这样的变量：mHorizontalPadding = 20;
+     * 这个是手动和ClipImageBorderView里面的成员变量mHorizontalPadding 写的一致，
+     * 也就是说这个变量，两个自定义的View都需要使用且需要相同的值，目前我们的做法，写死且每个View各自定义一个。
+     * 这种做法不用说，
+     * 肯定不好，即使抽取成自定义属性，两个View都需要进行抽取，
+     * 且用户在使用的时候，还需要设置为一样的值，总觉得有点强人所难~~
+     */
+
+    //水平方向与View的边距
+    private int mHorizontalPadding = 50;
+    // 垂直方向与View的边距
+    private int mVerticalPadding;
+
 
     private final Matrix mScaleMatrix = new Matrix();
 
@@ -46,8 +70,6 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
     private float mLastX = 0;
     private float mLastY = 0;
 
-    private boolean isCheckLeftAndRight = true;
-    private boolean isCheckTopAndBottom = true;
     private boolean isAutoScale = false;
 
 
@@ -55,14 +77,15 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
 
 
     public ZoomImage(Context context) {
+
         this(context, null);
     }
 
     public ZoomImage(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
-
-        mGestureDetector = new GestureDetector(context, new GestureDetector
+        setScaleType(ScaleType.MATRIX);
+        mGestureDetector = new GestureDetector(context,
+                new GestureDetector
                 .SimpleOnGestureListener() {
 
             /**
@@ -89,13 +112,7 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
                 if (getScale() < SCALE_MID) {
                     ZoomImage.this.postDelayed(new AutoScaleRunnable(SCALE_MID, x, y), 16);
                     isAutoScale = true;
-                }
-//                else if (getScale() >= SCALE_MID && getScale() < SCALE_MAX) {
-//                    ZoomImage.this.postDelayed(new AutoScaleRunnable(SCALE_MAX, x, y), 16);
-//                    isAutoScale = true;
-//                }
-
-                else {
+                }else {
                     ZoomImage.this.postDelayed(new AutoScaleRunnable(initScale, x, y), 16);
                     isAutoScale = true;
                 }
@@ -108,7 +125,7 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
         // 系统提供了这样的方法。表示滑动的时候，手的移动要大于这个返回的距离值才开始移动控件。
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
-        super.setScaleType(ScaleType.MATRIX);
+//        super.setScaleType(ScaleType.MATRIX);
 
         mScaleGestureDetetor = new ScaleGestureDetector(context, this);
         this.setOnTouchListener(this);
@@ -145,9 +162,10 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
             //            mScaleMatrix.postScale(scaleFactor, scaleFactor, getWidth() / 2,
             // getHeight() / 2);
             //以获得焦点的位置进行缩放
-            mScaleMatrix.postScale(scaleFactor, scaleFactor, detector.getFocusX(), detector
-                    .getFocusY());
-            checkBorderAndCenterWhenScale();
+            mScaleMatrix.postScale(scaleFactor, scaleFactor,
+                    detector.getFocusX(), detector.getFocusY());
+//            checkBorderAndCenterWhenScale();
+            checkMatrixBounds();
             setImageMatrix(mScaleMatrix);
 
         }
@@ -218,16 +236,11 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
         }
 
         lastPointCount = pointCount;
-        RectF rectF = getMatrixRectF();
+
+//        RectF rectF = getMatrixRectF();
         switch (event.getAction()) {
 
             case MotionEvent.ACTION_MOVE:
-                //当宽或高大于屏幕宽或高时，拖动效果认为是移动图片，反之则让ViewPager去处理
-                if (rectF.width() > getWidth() || rectF.height() > getHeight()) {
-                    //解决viewPager的滑动冲突；
-                    getParent().requestDisallowInterceptTouchEvent(true);
-
-                }
 
                 float dx = x - mLastX;
                 float dy = y - mLastY;
@@ -238,30 +251,16 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
                 if (isCanDrag) {
 
                     if (getDrawable() != null) {
-
-                        //判断当前已经到达边界，且还在拉的时候，事件交给ViewPager
-                        if (getMatrixRectF().left == 0 && dx > 0)
-                        {
-                            getParent().requestDisallowInterceptTouchEvent(false);
-                        }
-                        //判断当前已经到达边界，且还在拉的时候，事件交给ViewPager
-                        if (getMatrixRectF().right == getWidth() && dx < 0)
-                        {
-                            getParent().requestDisallowInterceptTouchEvent(false);
-                        }
-
-                        isCheckLeftAndRight = true;
-                        isCheckTopAndBottom = true;
+                        RectF rectF = getMatrixRectF();
 
                         //如果宽高小于屏幕宽度，则禁止左右移动；
-                        if (rectF.width() < getWidth()) {
+                        if (rectF.width() < getWidth() - mHorizontalPadding * 2) {
                             dx = 0;
-                            isCheckLeftAndRight = false;
+
                         }
                         //如果高度小于屏幕高度，则禁止上下移动
-                        if (rectF.height() < getHeight()) {
+                        if (rectF.height() < getHeight() - mVerticalPadding * 2) {
                             dy = 0;
-                            isCheckTopAndBottom = false;
                         }
 
                         mScaleMatrix.postTranslate(dx, dy);
@@ -280,19 +279,9 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
             case MotionEvent.ACTION_CANCEL:
                 lastPointCount = 0;
                 break;
-            case MotionEvent.ACTION_DOWN:
-                //当宽或高大于屏幕宽或高时，拖动效果认为是移动图片，反之则让ViewPager去处理
-                if (rectF.width() > getWidth() || rectF.height() > getHeight()) {
-                    //解决viewPager的滑动冲突；
-                    getParent().requestDisallowInterceptTouchEvent(true);
-
-                }
-                break;
-
             default:
                 break;
         }
-
 
         return true;
     }
@@ -323,26 +312,41 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
             }
             int width = getWidth();
             int height = getHeight();
+            //[bug]不能进行dp的转换，如果转换则图片的边沿会跑出选择框的间隔；
+//            // 计算padding的px
+//            mHorizontalPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+//                    mHorizontalPadding, getResources().getDisplayMetrics());
+            // 垂直方向的边距
+
+            mVerticalPadding = (getHeight() - (getWidth() - 2 * mHorizontalPadding)) / 2;
 
             //取图片的宽和高
             int dw = d.getIntrinsicWidth();
             int dh = d.getIntrinsicHeight();
 
             float scale = 1.0f;
-            //如果屏幕的宽高大于或者高于屏幕，则缩放至屏幕的宽或者高
-            if (dw > width && dh <= height) {
-                scale = width * 1.0f / dw;
+            //图片的宽度小于选择框，高度大于选择框，则进行图片的宽度的拉伸；
+            if (dw < getWidth() - mHorizontalPadding * 2
+                    && dh > getHeight() - mVerticalPadding * 2) {
+                scale = (getWidth() * 1.0f - mHorizontalPadding * 2) / dw;
             }
-
-            if (dh > height && dh <= width) {
-                scale = height * 1.0f / dh;
+            //图片的高度小于选择框，宽度大于选择框，则进行图片的高度的拉伸；
+            if (dh < getHeight() - mVerticalPadding * 2
+                    && dw > getWidth() - mHorizontalPadding * 2) {
+                scale = (getHeight() * 1.0f - mVerticalPadding * 2) / dh;
             }
-            // 如果宽和高都大于屏幕，则让其按按比例适应屏幕大小
-            if (dw > width && dh > height) {
-                scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
+            //图片的高度和宽度都小于选择框，缩放比选择最大值,进行拉伸；
+            if (dw < getWidth() - mHorizontalPadding * 2
+                    && dh < getHeight() - mVerticalPadding * 2) {
+                float scaleW = (getWidth() * 1.0f - mHorizontalPadding * 2)/ dw;
+                float scaleH = (getHeight() * 1.0f - mVerticalPadding * 2) / dh;
+                scale = Math.max(scaleW, scaleH);
             }
 
             initScale = scale;
+            SCALE_MID = initScale * 2;
+            SCALE_MAX = initScale * 4;
+
             //图片移到屏幕中心
             mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
             mScaleMatrix.postScale(scale, scale, getWidth() / 2, getHeight() / 2);
@@ -408,28 +412,43 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
     }
 
     private void checkMatrixBounds() {
-        RectF rectF = getMatrixRectF();
+
+
+        RectF rect = getMatrixRectF();
 
         float deltaX = 0, deltaY = 0;
         //        获取屏幕的宽高；
-        final float viewWidth = getWidth();
-        final float viewHeight = getHeight();
+        final float width = getWidth();
+        final float height = getHeight();
 
-        //        判断移动或者缩放后，图片显示是否超出屏幕边界；
-        if (rectF.top > 0 && isCheckTopAndBottom) {
-            deltaY = -rectF.top;
+        // 如果宽或高大于屏幕，则控制范围\
+        /**
+         * 分别计算在图片超出屏幕之后的情况下：
+         * 目的：将图片拖放设置满选择框；
+         * 方法：分情况计算图片边界与选择框相差的距离，然后拖拽图片到选择框中；
+         *
+         */
+        if (rect.width() + 0.01 >= width - 2 * mHorizontalPadding)
+        {
+            if (rect.left > mHorizontalPadding)
+            {
+                deltaX = -rect.left + mHorizontalPadding;
+            }
+            if (rect.right < width - mHorizontalPadding)
+            {
+                deltaX = width - mHorizontalPadding - rect.right;
+            }
         }
-
-        if (rectF.bottom < viewHeight && isCheckTopAndBottom) {
-            deltaY = viewHeight - rectF.bottom;
-        }
-
-        if (rectF.left > 0 && isCheckLeftAndRight) {
-            deltaX = -rectF.left;
-        }
-
-        if (rectF.right < viewWidth && isCheckLeftAndRight) {
-            deltaX = viewWidth - rectF.right;
+        if (rect.height() + 0.01>= height - 2 * mVerticalPadding)
+        {
+            if (rect.top > mVerticalPadding)
+            {
+                deltaY = -rect.top + mVerticalPadding;
+            }
+            if (rect.bottom < height - mVerticalPadding)
+            {
+                deltaY = height - mVerticalPadding - rect.bottom;
+            }
         }
 
         mScaleMatrix.postTranslate(deltaX, deltaY);
@@ -470,7 +489,8 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
         public void run() {
             //执行缩放操作；
             mScaleMatrix.postScale(mTempScale, mTempScale, x, y);
-            checkBorderAndCenterWhenScale();
+//            checkBorderAndCenterWhenScale();
+            checkMatrixBounds();
             setImageMatrix(mScaleMatrix);
 
             final float currentScale = getScale();
@@ -480,14 +500,25 @@ public class ZoomImage extends AppCompatImageView implements ScaleGestureDetecto
                 ZoomImage.this.postDelayed(this, 16);
             } else { //设置为目标的缩放比例
                 final float deltaScale = mTargetScale / currentScale;
-                Toast.makeText(getContext(), "deltaScale:mTargetScale:currentScale" + deltaScale
-                        + ":" + mTargetScale + ":" + mTargetScale, Toast.LENGTH_SHORT).show();
                 mScaleMatrix.postScale(deltaScale, deltaScale, x, y);
-                checkBorderAndCenterWhenScale();
+//                checkBorderAndCenterWhenScale();
+                checkMatrixBounds();
                 setImageMatrix(mScaleMatrix);
                 isAutoScale = false;
             }
-
         }
+    }
+
+    public Bitmap clip(){
+        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        draw(canvas);
+        return Bitmap.createBitmap(bitmap,mHorizontalPadding,mVerticalPadding,getWidth() -2 * mHorizontalPadding,
+                getWidth() - 2*mHorizontalPadding);
+    }
+
+    //对外公布设置mHorizontalPadding的方法；
+    public void setHorizontalPadding(int horizontalPadding){
+        this.mHorizontalPadding = horizontalPadding;
     }
 }
