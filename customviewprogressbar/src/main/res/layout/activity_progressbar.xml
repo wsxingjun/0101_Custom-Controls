@@ -16,6 +16,7 @@
         <com.oztaking.www.customviewprogressbar.HorizontalProgressBarWithNum
             android:id="@+id/cpb_customHorizontalprogressBar"
             app:progress_reached_bar_height="5dp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"

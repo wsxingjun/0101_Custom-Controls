@@ -1,4 +1,4 @@
-package com.oztaking.www.gesture;
+package com.oztaking.www.customviewclipimageborderview.zoomImageView;
 
 import android.content.Context;
 import android.graphics.Matrix;

@@ -1,4 +1,4 @@
-package com.oztaking.www.gesture;
+package com.oztaking.www.customviewclipimageborderview.zoomImageView;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -6,13 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.oztaking.www.customviewclipimageborderview.R;
+
 /**
  * @function:
  */
 
 public class ImageViewPagerAdapter extends PagerAdapter{
 
-    private int[] mImags = new int[]{R.drawable.tbug,R.drawable.ttt,R.drawable.xx,R.drawable.a};
+    private int[] mImags = new int[]{R.drawable.tbug, R.drawable.ttt,R.drawable.xx,R.drawable.a};
     private ImageView[] mImageViews = new ImageView[mImags.length];
 
     Context mContext;
