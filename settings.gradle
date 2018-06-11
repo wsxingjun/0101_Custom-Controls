@@ -1,1 +1,1 @@
-include ':app', ':customimageview', ':customcircleprogress', ':customviewgroup', ':customviewgroupflowlayout', ':customviewgrouptagflowlayout', ':customviewprogressbar', ':customviewclipimageborderview'
+include ':app', ':customimageview', ':customcircleprogress', ':customviewgroup', ':customviewgroupflowlayout', ':customviewgrouptagflowlayout', ':customviewprogressbar', ':customviewclipimageborderview', ':customcirclemenu'
