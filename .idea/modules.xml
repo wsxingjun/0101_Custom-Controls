@@ -4,24 +4,17 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CustomControl.iml" filepath="$PROJECT_DIR$/CustomControl.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customView.iml" filepath="$PROJECT_DIR$/customView.iml" />
       <module fileurl="file://$PROJECT_DIR$/customView.iml" filepath="$PROJECT_DIR$/customView.iml" />
       <module fileurl="file://$PROJECT_DIR$/customcirclemenu/customcirclemenu.iml" filepath="$PROJECT_DIR$/customcirclemenu/customcirclemenu.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customcircleprogress/customcircleprogress.iml" filepath="$PROJECT_DIR$/customcircleprogress/customcircleprogress.iml" />
+      <module fileurl="file://$PROJECT_DIR$/customcirclemenu/customcirclemenu.iml" filepath="$PROJECT_DIR$/customcirclemenu/customcirclemenu.iml" />
       <module fileurl="file://$PROJECT_DIR$/customcircleprogress/customcircleprogress.iml" filepath="$PROJECT_DIR$/customcircleprogress/customcircleprogress.iml" />
       <module fileurl="file://$PROJECT_DIR$/customimageview/customimageview.iml" filepath="$PROJECT_DIR$/customimageview/customimageview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customimageview/customimageview.iml" filepath="$PROJECT_DIR$/customimageview/customimageview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customviewclipimageborderview/customviewclipimageborderview.iml" filepath="$PROJECT_DIR$/customviewclipimageborderview/customviewclipimageborderview.iml" />
       <module fileurl="file://$PROJECT_DIR$/customviewclipimageborderview/customviewclipimageborderview.iml" filepath="$PROJECT_DIR$/customviewclipimageborderview/customviewclipimageborderview.iml" />
       <module fileurl="file://$PROJECT_DIR$/customviewgroup/customviewgroup.iml" filepath="$PROJECT_DIR$/customviewgroup/customviewgroup.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customviewgroup/customviewgroup.iml" filepath="$PROJECT_DIR$/customviewgroup/customviewgroup.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customviewgroupflowlayout/customviewgroupflowlayout.iml" filepath="$PROJECT_DIR$/customviewgroupflowlayout/customviewgroupflowlayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/customviewgroupflowlayout/customviewgroupflowlayout.iml" filepath="$PROJECT_DIR$/customviewgroupflowlayout/customviewgroupflowlayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/customviewgrouptagflowlayout/customviewgrouptagflowlayout.iml" filepath="$PROJECT_DIR$/customviewgrouptagflowlayout/customviewgrouptagflowlayout.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customviewgrouptagflowlayout/customviewgrouptagflowlayout.iml" filepath="$PROJECT_DIR$/customviewgrouptagflowlayout/customviewgrouptagflowlayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/customviewprogressbar/customviewprogressbar.iml" filepath="$PROJECT_DIR$/customviewprogressbar/customviewprogressbar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customviewprogressbar/customviewprogressbar.iml" filepath="$PROJECT_DIR$/customviewprogressbar/customviewprogressbar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/customviewvisibleview1/customviewvisibleview1.iml" filepath="$PROJECT_DIR$/customviewvisibleview1/customviewvisibleview1.iml" />
     </modules>
   </component>
 </project>
