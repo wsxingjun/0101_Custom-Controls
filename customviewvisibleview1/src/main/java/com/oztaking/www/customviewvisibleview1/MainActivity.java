@@ -13,7 +13,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.paint_layout);
 
         FrameLayout root = (FrameLayout) findViewById(R.id.root);
-        root.addView(new MyViewPaint(getApplicationContext()));
+//        root.addView(new MyViewPaint(getApplicationContext()));
+//        root.addView(new MyViewPaintPathAndText(getApplicationContext()));
+//        root.addView(new MyViewRange(getApplicationContext()));
+//        root.addView(new MyViewDrawText(getApplicationContext()));
+        root.addView(new MyViewBezier(getApplicationContext()));
+
 
     }
 }
