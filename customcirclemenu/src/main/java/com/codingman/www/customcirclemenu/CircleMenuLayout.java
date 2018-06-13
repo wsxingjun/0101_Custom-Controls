@@ -89,7 +89,7 @@ public class CircleMenuLayout extends ViewGroup {
             }
 
         } else { //如果设置为MeasureSpec.EXACTLY
-            resWidth = resHeight = Math.min(widthSize, heightSize)
+            resWidth = resHeight = Math.min(widthSize, heightSize);
         }
         //设置尺寸；
         setMeasuredDimension(resWidth, resHeight);

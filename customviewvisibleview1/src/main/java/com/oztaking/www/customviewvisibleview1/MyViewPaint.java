@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * @function:
+ * @function: 《自定义控件三部曲之绘图篇（一）：概述及基本几何图形绘制》
  *
  * 参考文章：
  * https://blog.csdn.net/u014702653/article/details/80342114
@@ -50,6 +50,8 @@ public class MyViewPaint extends View{
 
 
         canvas.drawRGB(255,255,255);
+
+
         //画圆
         canvas.drawCircle(200,200,150,mPaint);
         //画直线
