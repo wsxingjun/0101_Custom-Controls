@@ -19,6 +19,12 @@ public class MyViewFingerPaint extends View {
     private Paint mPaint = new Paint();
     private Path mPath = new Path();
 
+    /**
+     * 说明：起始点的坐标需要设置全局变量，否则会出现起点坐标不动的问题；会出现放射线；
+     */
+    public float controlX ;
+    public float controlY ;
+
 
     public MyViewFingerPaint(Context context) {
         super(context);
@@ -33,29 +39,40 @@ public class MyViewFingerPaint extends View {
     public boolean onTouchEvent(MotionEvent event) {
 //        return super.onTouchEvent(event);
         //记录初始位置的坐标；
-        int x = 0;
-        int y = 0;
+//         float controlX = 0f;
+//         float controlY = 0f;
+
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                x = (int) event.getX();
-                y = (int) event.getY();
-                mPath.moveTo(x, y);
+                controlX = event.getX();
+                controlY = event.getY();
+                mPath.moveTo(controlX, controlY);
 
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                int dx = (int) event.getX();
-                int dy = (int) event.getY();
-                mPath.lineTo(dx, dy);
-                invalidate(); //不断的重绘；
-//                x = dx + x;
-//                y = dy + y;
+                float dx = event.getX();
+                float dy = event.getY();
+
+                float endX = (controlX + dx) / 2;
+                float endY = (controlY + dy) /2;
+
+                mPath.quadTo(controlX,controlY,endX,endY);
+
+
+//                mPath.lineTo(dx, dy);
+
+
                 break;
             default:
                 break;
 
         }
+
+        controlX = event.getX();
+        controlY = event.getY();
+        invalidate(); //不断的重绘；
 
         return true;
     }
