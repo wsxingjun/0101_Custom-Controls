@@ -3,16 +3,21 @@ package com.oztaking.www.customviewvisibleview1;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ComposePathEffect;
 import android.graphics.CornerPathEffect;
 import android.graphics.DashPathEffect;
 import android.graphics.DiscretePathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathDashPathEffect;
+import android.graphics.SumPathEffect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
 /**
+ *
+ * 自定义控件三部曲之绘图篇(七)——Paint之函数大汇总
  * @function
  */
 
@@ -51,7 +56,15 @@ public class MyViewPaintAll extends View {
         //【5】
 //        drawDiscretePathEffect(canvas);
         //【6】印章路径
-        drawPathDashEffect(canvas);
+//        drawPathDashEffect(canvas);
+        //【7】印章路径的多种特效；
+//        drawPathDashEffectMulti(canvas);
+
+        //【8】多种特效的合并
+//        MultiEffect(canvas);
+
+        //【9】亚像素
+        subTextPixel(canvas);
     }
 
     /**
@@ -215,13 +228,140 @@ public class MyViewPaintAll extends View {
         stampPath.close();
 
         //圆上画了一个三角形
-        stampPath.addCircle(50,50,20, Path.Direction.CW);
+        stampPath.addCircle(0,0,3, Path.Direction.CCW);
+        canvas.drawPath(stampPath,mPaint);
+
+        canvas.translate(0,200);
+        mPaint.setPathEffect(
+                new PathDashPathEffect(stampPath,50,0,PathDashPathEffect.Style.TRANSLATE));
+        canvas.drawPath(mPath,mPaint);
+
+
+    }
+
+    /**
+     *  印章路径,多种路径对比
+     */
+
+    private void drawPathDashEffectMulti(Canvas canvas){
+        mPaint.reset();
+        mPath.reset();
+        mPaint.setStrokeWidth(4);
+        mPaint.setColor(Color.GREEN);
+        mPaint.setStyle(Paint.Style.STROKE);
+
+        Path stampPath = new Path();
+        //绘制了一个三角形
+        stampPath.moveTo(0,20);
+        stampPath.lineTo(10,0);
+        stampPath.lineTo(20,20);
+        stampPath.close();
+
+        //圆上画了一个三角形
+        stampPath.addCircle(0,0,3, Path.Direction.CCW);
         canvas.drawPath(stampPath,mPaint);
 
 //        canvas.translate(0,200);
 //        mPaint.setPathEffect(
-//                new PathDashPathEffect(stampPath,35,0,PathDashPathEffect.Style.TRANSLATE));
+//                new PathDashPathEffect(stampPath,50,0,PathDashPathEffect.Style.TRANSLATE));
 //        canvas.drawPath(mPath,mPaint);
+
+        mPath.moveTo(0,0);
+        for (int i=0; i<40; i++){
+            mPath.lineTo(i*35, (float) (Math.random() * 150));
+        }
+
+        canvas.drawPath(mPath,mPaint);
+
+        canvas.translate(0,200);
+        mPaint.setPathEffect(new PathDashPathEffect(stampPath,35,0,
+                PathDashPathEffect.Style.MORPH));
+        canvas.drawPath(mPath,mPaint);
+
+        canvas.translate(0,200);
+        mPaint.setPathEffect(new PathDashPathEffect(stampPath,35,0,
+                PathDashPathEffect.Style.ROTATE));
+        canvas.drawPath(mPath,mPaint);
+
+        canvas.translate(0,200);
+        mPaint.setPathEffect(new PathDashPathEffect(stampPath,35,0,
+                PathDashPathEffect.Style.TRANSLATE));
+        canvas.drawPath(mPath,mPaint);
+
+    }
+
+    /**
+     * 特效合并
+     */
+
+    private void MultiEffect(Canvas canvas){
+        mPaint.reset();
+        mPath.reset();
+
+        mPaint.setStrokeWidth(4);
+        mPaint.setColor(Color.GREEN);
+        mPaint.setStyle(Paint.Style.STROKE);
+
+        //
+        mPath.moveTo(10,10);
+        for (int i=0; i<40; i++){
+            mPath.lineTo(i*35, (float) (Math.random() * 150));
+        }
+//        普通线
+        canvas.drawPath(mPath,mPaint);
+
+        //圆角弧线
+        canvas.translate(0,200);
+        CornerPathEffect cornerPathEffect = new CornerPathEffect(100);
+        mPaint.setPathEffect(cornerPathEffect);
+        canvas.drawPath(mPath,mPaint);
+
+        //虚线特效
+        canvas.translate(0,200);
+        DashPathEffect dashPathEffect = new DashPathEffect(new float[]{2, 5, 10, 10}, 0);
+        mPaint.setPathEffect(dashPathEffect);
+        canvas.drawPath(mPath,mPaint);
+
+        //合成特效；composePathEffect
+        //于原始路径，得到路径B，然后再在路径B的基础上应用虚线特效得到最终的效果D;
+        canvas.translate(0,200);
+        ComposePathEffect composePathEffect = new ComposePathEffect(dashPathEffect,
+                cornerPathEffect);
+        mPaint.setPathEffect(composePathEffect);
+        canvas.drawPath(mPath,mPaint);
+
+
+        //合成特效：SumpathEffect
+        //先将圆角特效应用于原始路径A得到路径B,然后将虚线特效应依然应用于原始路径，得到路径C.然后将路径B和路径C合并（
+        canvas.translate(0,200);
+        SumPathEffect sumPathEffect = new SumPathEffect(dashPathEffect, cornerPathEffect);
+        mPaint.setPathEffect(sumPathEffect);
+        canvas.drawPath(mPath,mPaint);
+
+
+    }
+
+    /**
+     * 亚像素
+     */
+
+    private void subTextPixel(Canvas canvas){
+        mPaint.reset();
+        mPath.reset();
+        mPaint.setStrokeWidth(4);
+        mPaint.setColor(Color.GREEN);
+        mPaint.setStyle(Paint.Style.FILL);
+
+        mPaint.setSubpixelText(false);
+        mPaint.setTextSize(100);
+        mPaint.setTextScaleX(5);
+        canvas.drawText("抱抱",50,150,mPaint);
+
+        canvas.translate(0,100);
+        mPaint.setSubpixelText(true);
+        mPaint.setTextScaleX(5);
+        mPaint.setTextSize(100);
+        canvas.drawText("抱抱",50,150,mPaint);
 
 
 

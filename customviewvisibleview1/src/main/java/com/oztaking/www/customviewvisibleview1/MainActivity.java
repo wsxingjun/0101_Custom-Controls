@@ -35,8 +35,12 @@ public class MainActivity extends AppCompatActivity {
 //        root.addView(myViewBoBo);
 //        myViewBoBo.startAnim();
 
+//        FrameLayout root = (FrameLayout) findViewById(R.id.root);
+//        root.addView(new MyViewPaintAll(getApplicationContext()));
+
+
         FrameLayout root = (FrameLayout) findViewById(R.id.root);
-        root.addView(new MyViewPaintAll(getApplicationContext()));
+        root.addView(new MyViewColorMatrix08(getApplicationContext()));
 
 
     }
