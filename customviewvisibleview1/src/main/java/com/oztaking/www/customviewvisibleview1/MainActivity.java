@@ -38,11 +38,17 @@ public class MainActivity extends AppCompatActivity {
 //        FrameLayout root = (FrameLayout) findViewById(R.id.root);
 //        root.addView(new MyViewPaintAll(getApplicationContext()));
 
+//
+//        FrameLayout root = (FrameLayout) findViewById(R.id.root);
+//        root.addView(new MyViewColorMatrix08(getApplicationContext()));
 
+//        //Canvas 画布
+//        FrameLayout root = (FrameLayout) findViewById(R.id.root);
+//        root.addView(new MyViewCanvas13(getApplicationContext()));
+
+        //Canvas 画布
         FrameLayout root = (FrameLayout) findViewById(R.id.root);
-        root.addView(new MyViewColorMatrix08(getApplicationContext()));
-
-
+        root.addView(new MyViewQQDeleteDemo15(getApplicationContext()));
     }
 
 //
@@ -51,6 +57,5 @@ public class MainActivity extends AppCompatActivity {
 ////        view.reset();
 //        view.resetCanvas();
 //    }
-
 
 }
