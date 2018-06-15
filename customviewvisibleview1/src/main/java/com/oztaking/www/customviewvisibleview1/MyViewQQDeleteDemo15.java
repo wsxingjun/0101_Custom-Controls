@@ -58,11 +58,11 @@ public class MyViewQQDeleteDemo15 extends FrameLayout{
         canvas.drawCircle(mStartPoint.x,mStartPoint.y,mRadius,mPaint);
         //如果检测到手指的触摸，画出当前的圆
         if (mTouch){
+            calculatePath();
             canvas.drawCircle(mCurPoint.x,mCurPoint.y,mRadius,mPaint);
+            canvas.drawPath(mPath,mPaint);
         }
         canvas.restore();
-
-
         super.dispatchDraw(canvas);
     }
 
@@ -81,13 +81,56 @@ public class MyViewQQDeleteDemo15 extends FrameLayout{
             case MotionEvent.ACTION_UP:
                 mTouch = false;
                 break;
-
         }
 
         mCurPoint.setX(event.getX(),event.getY());
         postInvalidate();
         return true;
     }
+
+    //计算贝塞尔的路径
+    private void calculatePath(){
+        float x = mCurPoint.x;
+        float y = mCurPoint.y;
+
+        float startX = mStartPoint.x;
+        float startY = mStartPoint.y;
+
+        //根据角度计算出四边形的四个点；
+        float dx = x - startX;
+        float dy = y - startY;
+
+        double a = Math.atan(dy/dx);
+        float offsetX = (float) (mRadius * Math.sin(a));
+        float offsetY = (float) (mRadius * Math.cos(a));
+
+        float x0 = startX + offsetX;
+        float y0 = startY - offsetY;
+
+        float x1 = x + offsetX;
+        float y1 = y - offsetY;
+
+        float x2 = x - offsetX;
+        float y2 = y + offsetY;
+
+        float x3 = startX - offsetX;
+        float y3 = startY + offsetY;
+
+        float anchorX = (startX + x)/2;
+        float anchorY = (startY + y)/2;
+
+        //连线成为一个封闭的图形；
+        mPath.reset();
+        mPath.moveTo(x0,y0);
+        mPath.quadTo(anchorX,anchorY,x1,y1);
+        mPath.lineTo(x2,y2);
+        mPath.quadTo(anchorX,anchorY,x3,y3);
+        mPath.lineTo(x0,y0);
+    }
+
+
+
+
 
     private class Ponit {
         private float x;
